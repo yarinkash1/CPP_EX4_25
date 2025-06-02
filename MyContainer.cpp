@@ -1,7 +1,10 @@
+// yarinkash1@gmail.com
+
 #include "MyContainer.hpp"
 
 namespace my_cont_ns
 {
+    // == MyContainer Class Implementation ==
     /**
      * @brief Default constructor for MyContainer.
      * Initializes an empty container.
@@ -95,7 +98,8 @@ namespace my_cont_ns
         std::cout << std::endl;
     }
 
-    ///////////////////////////////////////////////////////////////
+    // == Iterator Implementation ==
+    // **AscendingOrder Iterator Class Implementation**
 
     /**
      * @brief Constructor for the AscendingOrder iterator.
@@ -142,32 +146,6 @@ namespace my_cont_ns
     }
 
     /**
-     * @brief Inequality operator for the AscendingOrder iterator.
-     * Compares two AscendingOrder iterators.
-     * @param other The other AscendingOrder iterator to compare with.
-     * @returns true if the current index is not equal to the other index, false otherwise.
-     * @throw None
-     */
-    template <typename T>
-    bool MyContainer<T>::AscendingOrder::operator!=(const AscendingOrder &other) const
-    {
-        return current_index != other.current_index;
-    }
-
-    /**
-     * @brief Dereference operator for the AscendingOrder iterator.
-     * 
-     * @param None
-     * @returns A reference to the current element in the sorted order.
-     * @throw std::out_of_range if the current index exceeds the size of sorted_elements.
-     */
-    template <typename T>
-    const T &MyContainer<T>::AscendingOrder::operator*() const
-    {
-        return !(*this == other);  // Use the == operator
-    }
-
-    /**
      * @brief Equality operator for the AscendingOrder iterator.
      * Compares two AscendingOrder iterators.
      * @param other The other AscendingOrder iterator to compare with.
@@ -178,6 +156,36 @@ namespace my_cont_ns
     bool MyContainer<T>::AscendingOrder::operator==(const AscendingOrder &other) const
     {
         return current_index == other.current_index;
+    }
+
+    /**
+     * @brief Inequality operator for the AscendingOrder iterator.
+     * Compares two AscendingOrder iterators.
+     * @param other The other AscendingOrder iterator to compare with.
+     * @returns true if the current index is not equal to the other index, false otherwise.
+     * @throw None
+     */
+    template <typename T>
+    bool MyContainer<T>::AscendingOrder::operator!=(const AscendingOrder &other) const
+    {
+        return !(*this == other); // Use the == operator
+    }
+
+    /**
+     * @brief Dereference operator for the AscendingOrder iterator.
+     *
+     * @param None
+     * @returns A reference to the current element in the sorted order.
+     * @throw std::out_of_range if the current index exceeds the size of sorted_elements.
+     */
+    template <typename T>
+    const T &MyContainer<T>::AscendingOrder::operator*() const
+    {
+        if (current_index >= sorted_elements.size())
+        {
+            throw std::out_of_range("Iterator out of range");
+        }
+        return sorted_elements[current_index];
     }
 
     /**
