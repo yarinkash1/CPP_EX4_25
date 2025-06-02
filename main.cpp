@@ -43,10 +43,42 @@ int main()
     std::cout << "   String container contents: ";
     stringContainer.print();
 
-    std::cout << "\n5. Testing error handling:" << std::endl;
+        std::cout << "\n5. Testing AscendingOrder iterator:" << std::endl;
+    std::cout << "   Original container contents: ";
+    container.print();
+
+    // Get ascending order iterator
+    auto ascending = container.getAscendingOrder();
+    std::cout << "   Ascending order traversal: ";
+    for (auto it = ascending.begin(); it != ascending.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+
+        // Test with a new container with more elements
+    std::cout << "\n   Testing with more elements:" << std::endl;
+    MyContainer<int> testContainer;
+    testContainer.add(50);
+    testContainer.add(25);
+    testContainer.add(75);
+    testContainer.add(10);
+    testContainer.add(90);
+    testContainer.add(25); // Duplicate
+
+    std::cout << "   Original order: ";
+    testContainer.print();
+
+    auto testAscending = testContainer.getAscendingOrder();
+    std::cout << "   Ascending order: ";
+    for (auto it = testAscending.begin(); it != testAscending.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "\n6. Testing error handling:" << std::endl;
     try
     {
-        container.remove(999); // Element that doesn't exist
+        container.remove(123456789); // Element that doesn't exist
     }
     catch (const std::invalid_argument &e)
     {
