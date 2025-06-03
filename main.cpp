@@ -33,7 +33,7 @@ int main()
     std::cout << "   Container contents: ";
     container.print();
 
-    std::cout << "\n4. Testing with strings:" << std::endl;
+    std::cout << "\n4. With strings:" << std::endl;
     MyContainer<std::string> stringContainer;
     stringContainer.add("Hello");
     stringContainer.add("World");
@@ -43,42 +43,73 @@ int main()
     std::cout << "   String container contents: ";
     stringContainer.print();
 
-        std::cout << "\n5. Testing AscendingOrder iterator:" << std::endl;
+    // == Iterators ==
+    std::cout << "\n5. AscendingOrder iterator:" << std::endl;
     std::cout << "   Original container contents: ";
     container.print();
 
     // Get ascending order iterator
     auto ascending = container.getAscendingOrder();
     std::cout << "   Ascending order traversal: ";
-    for (auto it = ascending.begin(); it != ascending.end(); ++it) {
+    for (auto it = ascending.begin(); it != ascending.end(); ++it)
+    {
         std::cout << *it << " ";
     }
     std::cout << std::endl;
 
-        // Test with a new container with more elements
-    std::cout << "\n   Testing with more elements:" << std::endl;
-    MyContainer<int> testContainer;
-    testContainer.add(50);
-    testContainer.add(25);
-    testContainer.add(75);
-    testContainer.add(10);
-    testContainer.add(90);
-    testContainer.add(25); // Duplicate
-
-    std::cout << "   Original order: ";
-    testContainer.print();
-
-    auto testAscending = testContainer.getAscendingOrder();
-    std::cout << "   Ascending order: ";
-    for (auto it = testAscending.begin(); it != testAscending.end(); ++it) {
+    // DescendingOrder iterator
+    std::cout << "\n6.   DescendingOrder (largest to smallest):" << std::endl;
+    auto descending = container.getDescendingOrder();
+    std::cout << "   ";
+    for (auto it = descending.begin(); it != descending.end(); ++it) {
         std::cout << *it << " ";
     }
     std::cout << std::endl;
 
-    std::cout << "\n6. Testing error handling:" << std::endl;
+    // SideCrossOrder iterator
+    std::cout << "\n7.   SideCrossOrder (alternating min/max):" << std::endl;
+    auto sideCross = container.getSideCrossOrder();
+    std::cout << "   ";
+    for (auto it = sideCross.begin(); it != sideCross.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+
+    // ReverseOrder iterator
+    std::cout << "\n8.   ReverseOrder (reverse insertion order):" << std::endl;
+    auto reverse = container.getReverseOrder();
+    std::cout << "   ";
+    for (auto it = reverse.begin(); it != reverse.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+
+    // Order iterator
+    std::cout << "\n9.   Order (original insertion order):" << std::endl;
+    auto order = container.getOrder();
+    std::cout << "   ";
+    for (auto it = order.begin(); it != order.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+
+    // MiddleOutOrder iterator
+
+    std::cout << "\n10.   MiddleOutOrder (middle, then alternating left-right):" << std::endl;
+        std::cout << "Order of elemets added: 10 ,20 ,15" << std::endl;
+    auto middleOut = container.getMiddleOutOrder();
+    std::cout << "   ";
+    for (auto it = middleOut.begin(); it != middleOut.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+
+    // == Error Handling ==
+    std::cout << "\n11. Testing error handling:" << std::endl;
+    std::cout << "   Attempting to remove an element that doesn't exist (555):" << std::endl;
     try
     {
-        container.remove(123456789); // Element that doesn't exist
+        container.remove(555); // Element that doesn't exist
     }
     catch (const std::invalid_argument &e)
     {

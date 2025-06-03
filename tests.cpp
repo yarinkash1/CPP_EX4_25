@@ -364,7 +364,8 @@ TEST_CASE("AscendingOrder iterator - doesn't modify original container")
     std::vector<int> result;
     
     // Actually collect the values (more realistic usage)
-    for (auto it = ascending.begin(); it != ascending.end(); ++it) {
+    for (auto it = ascending.begin(); it != ascending.end(); ++it) 
+    {
         result.push_back(*it);
     }
     
@@ -374,5 +375,412 @@ TEST_CASE("AscendingOrder iterator - doesn't modify original container")
     
     // Container should still be unchanged
     CHECK(container.size() == 3);
+}
+
+//////////////////////////////////////////////////////////
+
+// == DescendingOrder Iterator Tests ==
+
+TEST_CASE("DescendingOrder iterator - basic functionality") 
+{
+    MyContainer<int> container;
     
+    // Add elements in random order
+    container.add(7);
+    container.add(15);
+    container.add(6);
+    container.add(1);
+    container.add(2);
+    
+    // Get descending order iterator
+    auto descending = container.getDescendingOrder();
+    auto it = descending.begin();
+    auto end_it = descending.end();
+    
+    // Test iterator traversal
+    CHECK(it != end_it);
+    CHECK(*it == 15);  // First element should be largest
+    
+    ++it;
+    CHECK(*it == 7);
+    
+    ++it;
+    CHECK(*it == 6);
+    
+    ++it;
+    CHECK(*it == 2);
+    
+    ++it;
+    CHECK(*it == 1);   // Last element should be smallest
+    
+    ++it;
+    CHECK(it == end_it);  // Should reach end
+}
+
+TEST_CASE("DescendingOrder iterator - for loop") 
+{
+    MyContainer<int> container;
+    container.add(30);
+    container.add(10);
+    container.add(20);
+    container.add(5);
+    
+    auto descending = container.getDescendingOrder();
+    std::vector<int> result;
+    
+    for (auto it = descending.begin(); it != descending.end(); ++it) 
+    {
+        result.push_back(*it);
+    }
+    
+    // Should be in descending order
+    std::vector<int> expected = {30, 20, 10, 5};
+    CHECK(result == expected);
+}
+
+TEST_CASE("DescendingOrder iterator - with duplicates") 
+{
+    MyContainer<int> container;
+    container.add(5);
+    container.add(3);
+    container.add(5);
+    container.add(1);
+    container.add(3);
+    container.add(5);
+    
+    auto descending = container.getDescendingOrder();
+    std::vector<int> result;
+    
+    for (auto it = descending.begin(); it != descending.end(); ++it) {
+        result.push_back(*it);
+    }
+    
+    // Should include all duplicates in descending order
+    std::vector<int> expected = {5, 5, 5, 3, 3, 1};
+    CHECK(result == expected);
+}
+
+TEST_CASE("DescendingOrder iterator - empty container") 
+{
+    MyContainer<int> container;
+    
+    auto descending = container.getDescendingOrder();
+    auto it = descending.begin();
+    auto end_it = descending.end();
+    
+    // Empty container - begin should equal end
+    CHECK(it == end_it);
+}
+
+// == SideCrossOrder Iterator Tests ==
+
+TEST_CASE("SideCrossOrder iterator - basic functionality") 
+{
+    MyContainer<int> container;
+    
+    // Add elements: [7,15,6,1,2]
+    container.add(7);
+    container.add(15);
+    container.add(6);
+    container.add(1);
+    container.add(2);
+    
+    auto sideCross = container.getSideCrossOrder();
+    std::vector<int> result;
+    
+    for (auto it = sideCross.begin(); it != sideCross.end(); ++it) {
+        result.push_back(*it);
+    }
+    
+    // Expected: smallest, largest, second smallest, second largest, middle
+    // Sorted: [1,2,6,7,15] -> SideCross: [1,15,2,7,6]
+    std::vector<int> expected = {1, 15, 2, 7, 6};
+    CHECK(result == expected);
+}
+
+TEST_CASE("SideCrossOrder iterator - even number of elements") 
+{
+    MyContainer<int> container;
+    container.add(10);
+    container.add(5);
+    container.add(15);
+    container.add(20);
+    
+    auto sideCross = container.getSideCrossOrder();
+    std::vector<int> result;
+    
+    for (auto it = sideCross.begin(); it != sideCross.end(); ++it) {
+        result.push_back(*it);
+    }
+    
+    // Sorted: [5,10,15,20] -> SideCross: [5,20,10,15]
+    std::vector<int> expected = {5, 20, 10, 15};
+    CHECK(result == expected);
+}
+
+TEST_CASE("SideCrossOrder iterator - single element") 
+{
+    MyContainer<int> container;
+    container.add(42);
+    
+    auto sideCross = container.getSideCrossOrder();
+    auto it = sideCross.begin();
+    
+    CHECK(*it == 42);
+    ++it;
+    CHECK(it == sideCross.end());
+}
+
+// == ReverseOrder Iterator Tests ==
+
+TEST_CASE("ReverseOrder iterator - basic functionality") 
+{
+    MyContainer<int> container;
+    
+    // Add elements: [7,15,6,1,2]
+    container.add(7);
+    container.add(15);
+    container.add(6);
+    container.add(1);
+    container.add(2);
+    
+    auto reverse = container.getReverseOrder();
+    std::vector<int> result;
+    
+    for (auto it = reverse.begin(); it != reverse.end(); ++it) {
+        result.push_back(*it);
+    }
+    
+    // Should be in reverse insertion order: [2,1,6,15,7]
+    std::vector<int> expected = {2, 1, 6, 15, 7};
+    CHECK(result == expected);
+}
+
+TEST_CASE("ReverseOrder iterator - string type") 
+{
+    MyContainer<std::string> container;
+    container.add("first");
+    container.add("second");
+    container.add("third");
+    
+    auto reverse = container.getReverseOrder();
+    std::vector<std::string> result;
+    
+    for (auto it = reverse.begin(); it != reverse.end(); ++it) {
+        result.push_back(*it);
+    }
+    
+    std::vector<std::string> expected = {"third", "second", "first"};
+    CHECK(result == expected);
+}
+
+TEST_CASE("ReverseOrder iterator - empty container") 
+{
+    MyContainer<int> container;
+    
+    auto reverse = container.getReverseOrder();
+    CHECK(reverse.begin() == reverse.end());
+}
+
+// == Order Iterator Tests ==
+
+TEST_CASE("Order iterator - basic functionality") 
+{
+    MyContainer<int> container;
+    
+    // Add elements: [7,15,6,1,2]
+    container.add(7);
+    container.add(15);
+    container.add(6);
+    container.add(1);
+    container.add(2);
+    
+    auto order = container.getOrder();
+    std::vector<int> result;
+    
+    for (auto it = order.begin(); it != order.end(); ++it) {
+        result.push_back(*it);
+    }
+    
+    // Should be in original insertion order: [7,15,6,1,2]
+    std::vector<int> expected = {7, 15, 6, 1, 2};
+    CHECK(result == expected);
+}
+
+TEST_CASE("Order iterator - with duplicates") 
+{
+    MyContainer<int> container;
+    container.add(5);
+    container.add(5);
+    container.add(3);
+    container.add(5);
+    
+    auto order = container.getOrder();
+    std::vector<int> result;
+    
+    for (auto it = order.begin(); it != order.end(); ++it) {
+        result.push_back(*it);
+    }
+    
+    // Should maintain original order including duplicates
+    std::vector<int> expected = {5, 5, 3, 5};
+    CHECK(result == expected);
+}
+
+// == MiddleOutOrder Iterator Tests ==
+
+TEST_CASE("MiddleOutOrder iterator - basic functionality") 
+{
+    MyContainer<int> container;
+    
+    // Add elements: [7,15,6,1,2]
+    container.add(7);
+    container.add(15);
+    container.add(6);
+    container.add(1);
+    container.add(2);
+    
+    auto middleOut = container.getMiddleOutOrder();
+    std::vector<int> result;
+    
+    for (auto it = middleOut.begin(); it != middleOut.end(); ++it) {
+        result.push_back(*it);
+    }
+    
+    // Middle index = (5-1)/2 = 2, so start with element at index 2 (6)
+    // Then alternate: left(15), right(1), left(7), right(2)
+    std::vector<int> expected = {6, 15, 1, 7, 2};
+    CHECK(result == expected);
+}
+
+TEST_CASE("MiddleOutOrder iterator - even number of elements") 
+{
+    MyContainer<int> container;
+    // Add elements: [10,20,30,40]
+    container.add(10);  // index 0
+    container.add(20);  // index 1 (left middle for even count)
+    container.add(30);  // index 2
+    container.add(40);  // index 3
+    
+    auto middleOut = container.getMiddleOutOrder();
+    std::vector<int> result;
+    
+    for (auto it = middleOut.begin(); it != middleOut.end(); ++it) {
+        result.push_back(*it);
+    }
+    
+    // Middle index = (4-1)/2 = 1, so start with element at index 1 (20)
+    // Then: left(10), right(30), right(40)
+    std::vector<int> expected = {20, 10, 30, 40};
+    CHECK(result == expected);
+}
+
+TEST_CASE("MiddleOutOrder iterator - single element") 
+{
+    MyContainer<int> container;
+    container.add(100);
+    
+    auto middleOut = container.getMiddleOutOrder();
+    auto it = middleOut.begin();
+    
+    CHECK(*it == 100);
+    ++it;
+    CHECK(it == middleOut.end());
+}
+
+TEST_CASE("MiddleOutOrder iterator - three elements") 
+{
+    MyContainer<int> container;
+    // Add elements: [1,2,3]
+    container.add(1);  // index 0
+    container.add(2);  // index 1 (middle)
+    container.add(3);  // index 2
+    
+    auto middleOut = container.getMiddleOutOrder();
+    std::vector<int> result;
+    
+    for (auto it = middleOut.begin(); it != middleOut.end(); ++it) {
+        result.push_back(*it);
+    }
+    
+    // Start with middle (2), then left (1), then right (3)
+    std::vector<int> expected = {2, 1, 3};
+    CHECK(result == expected);
+}
+
+// == Iterator Bounds Checking Tests ==
+
+TEST_CASE("All iterators - bounds checking") 
+{
+    MyContainer<int> container;
+    container.add(10);
+    container.add(20);
+    
+    // Test that all iterators throw when dereferencing past end
+    auto ascending = container.getAscendingOrder();
+    auto desc = container.getDescendingOrder();
+    auto sideCross = container.getSideCrossOrder();
+    auto reverse = container.getReverseOrder();
+    auto order = container.getOrder();
+    auto middleOut = container.getMiddleOutOrder();
+    
+    // Move all iterators to end
+    auto asc_end = ascending.end();
+    auto desc_end = desc.end();
+    auto side_end = sideCross.end();
+    auto rev_end = reverse.end();
+    auto ord_end = order.end();
+    auto mid_end = middleOut.end();
+    
+    // All should throw when dereferenced
+    CHECK_THROWS_AS(*asc_end, std::out_of_range);
+    CHECK_THROWS_AS(*desc_end, std::out_of_range);
+    CHECK_THROWS_AS(*side_end, std::out_of_range);
+    CHECK_THROWS_AS(*rev_end, std::out_of_range);
+    CHECK_THROWS_AS(*ord_end, std::out_of_range);
+    CHECK_THROWS_AS(*mid_end, std::out_of_range);
+}
+
+// == Mixed Iterator Operations Test ==
+
+TEST_CASE("Multiple iterators on same container") 
+{
+    MyContainer<int> container;
+    container.add(5);
+    container.add(1);
+    container.add(3);
+    
+    // Get different iterator types
+    auto ascending = container.getAscendingOrder();
+    auto descending = container.getDescendingOrder();
+    auto reverse = container.getReverseOrder();
+    auto order = container.getOrder();
+    
+    // Collect results from each
+    std::vector<int> asc_result, desc_result, rev_result, ord_result;
+    
+    for (auto it = ascending.begin(); it != ascending.end(); ++it) {
+        asc_result.push_back(*it);
+    }
+    
+    for (auto it = descending.begin(); it != descending.end(); ++it) {
+        desc_result.push_back(*it);
+    }
+    
+    for (auto it = reverse.begin(); it != reverse.end(); ++it) {
+        rev_result.push_back(*it);
+    }
+    
+    for (auto it = order.begin(); it != order.end(); ++it) {
+        ord_result.push_back(*it);
+    }
+    
+    // Verify each iterator type
+    CHECK(asc_result == std::vector<int>{1, 3, 5});      // Ascending
+    CHECK(desc_result == std::vector<int>{5, 3, 1});     // Descending  
+    CHECK(rev_result == std::vector<int>{3, 1, 5});      // Reverse insertion
+    CHECK(ord_result == std::vector<int>{5, 1, 3});      // Original order
+    
+    // Container should be unchanged
+    CHECK(container.size() == 3);
 }
