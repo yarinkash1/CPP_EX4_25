@@ -887,3 +887,228 @@ TEST_CASE("Operator<< with chaining")
     
     CHECK(stream.str() == "Container 1: 1 2 | Container 2: 10 20 | End");
 }
+
+TEST_CASE("Template functionality test - char type")
+{
+    MyContainer<char> charContainer;
+
+    // Test basic operations with chars
+    charContainer.add('Z');
+    charContainer.add('A');
+    charContainer.add('M');
+    charContainer.add('B');
+    charContainer.add('Y');
+    CHECK(charContainer.size() == 5);
+    CHECK(charContainer.isEmpty() == false);
+
+    // Test char removal
+    charContainer.remove('M');
+    CHECK(charContainer.size() == 4);
+
+    // Test char duplicates
+    charContainer.add('A'); // Duplicate
+    charContainer.add('A'); // Another duplicate
+    CHECK(charContainer.size() == 6);
+
+    // Remove all occurrences of 'A'
+    charContainer.remove('A'); // Should remove all 3 A's
+    CHECK(charContainer.size() == 3); // Z, B, Y remaining
+
+    // Try to remove non-existent char
+    CHECK_THROWS_AS(charContainer.remove('X'), std::invalid_argument);
+
+    // Size should remain unchanged after failed removal
+    CHECK(charContainer.size() == 3);
+}
+
+TEST_CASE("Char container - all iterator types")
+{
+    MyContainer<char> charContainer;
+    
+    // Add characters: ['Z', 'A', 'M', 'B', 'Y']
+    charContainer.add('Z');
+    charContainer.add('A');
+    charContainer.add('M');
+    charContainer.add('B');
+    charContainer.add('Y');
+
+    // Test AscendingOrder with chars
+    auto ascending = charContainer.getAscendingOrder();
+    std::vector<char> asc_result;
+    for (auto it = ascending.begin(); it != ascending.end(); ++it) {
+        asc_result.push_back(*it);
+    }
+    // Should be alphabetical: A, B, M, Y, Z
+    std::vector<char> expected_asc = {'A', 'B', 'M', 'Y', 'Z'};
+    CHECK(asc_result == expected_asc);
+
+    // Test DescendingOrder with chars
+    auto descending = charContainer.getDescendingOrder();
+    std::vector<char> desc_result;
+    for (auto it = descending.begin(); it != descending.end(); ++it) {
+        desc_result.push_back(*it);
+    }
+    // Should be reverse alphabetical: Z, Y, M, B, A
+    std::vector<char> expected_desc = {'Z', 'Y', 'M', 'B', 'A'};
+    CHECK(desc_result == expected_desc);
+
+    // Test SideCrossOrder with chars
+    auto sideCross = charContainer.getSideCrossOrder();
+    std::vector<char> side_result;
+    for (auto it = sideCross.begin(); it != sideCross.end(); ++it) {
+        side_result.push_back(*it);
+    }
+    // Sorted: [A,B,M,Y,Z] -> SideCross: [A,Z,B,Y,M]
+    std::vector<char> expected_side = {'A', 'Z', 'B', 'Y', 'M'};
+    CHECK(side_result == expected_side);
+
+    // Test ReverseOrder with chars
+    auto reverse = charContainer.getReverseOrder();
+    std::vector<char> rev_result;
+    for (auto it = reverse.begin(); it != reverse.end(); ++it) {
+        rev_result.push_back(*it);
+    }
+    // Should be reverse insertion: Y, B, M, A, Z
+    std::vector<char> expected_rev = {'Y', 'B', 'M', 'A', 'Z'};
+    CHECK(rev_result == expected_rev);
+
+    // Test Order with chars
+    auto order = charContainer.getOrder();
+    std::vector<char> ord_result;
+    for (auto it = order.begin(); it != order.end(); ++it) {
+        ord_result.push_back(*it);
+    }
+    // Should be original insertion: Z, A, M, B, Y
+    std::vector<char> expected_ord = {'Z', 'A', 'M', 'B', 'Y'};
+    CHECK(ord_result == expected_ord);
+
+    // Test MiddleOutOrder with chars
+    auto middleOut = charContainer.getMiddleOutOrder();
+    std::vector<char> mid_result;
+    for (auto it = middleOut.begin(); it != middleOut.end(); ++it) {
+        mid_result.push_back(*it);
+    }
+    // Middle index = (5-1)/2 = 2, so start with 'M'
+    // Then alternate: left('A'), right('B'), left('Z'), right('Y')
+    std::vector<char> expected_mid = {'M', 'A', 'B', 'Z', 'Y'};
+    CHECK(mid_result == expected_mid);
+
+    // Container should remain unchanged
+    CHECK(charContainer.size() == 5);
+}
+
+TEST_CASE("Char container - operator<< streaming")
+{
+    MyContainer<char> charContainer;
+    
+    // Test empty char container
+    std::ostringstream empty_stream;
+    empty_stream << charContainer;
+    CHECK(empty_stream.str() == "");
+    
+    // Add chars and test streaming
+    charContainer.add('H');
+    charContainer.add('i');
+    charContainer.add('!');
+    
+    std::ostringstream stream;
+    stream << charContainer;
+    
+    // Should output chars separated by spaces
+    CHECK(stream.str() == "H i ! ");
+    
+    // Test with single char
+    MyContainer<char> singleChar;
+    singleChar.add('X');
+    
+    std::ostringstream single_stream;
+    single_stream << singleChar;
+    CHECK(single_stream.str() == "X ");
+    
+    // Test that streaming doesn't modify container
+    CHECK(charContainer.size() == 3);
+    CHECK(singleChar.size() == 1);
+}
+
+TEST_CASE("Char container - with duplicates and special characters")
+{
+    MyContainer<char> charContainer;
+    
+    // Add various chars including duplicates and special characters
+    charContainer.add('a');
+    charContainer.add('@');
+    charContainer.add('a');  // duplicate
+    charContainer.add('5');  // digit
+    charContainer.add('!');  // special
+    charContainer.add('a');  // another duplicate
+    
+    CHECK(charContainer.size() == 6);
+    
+    // Test ascending order with mixed character types
+    auto ascending = charContainer.getAscendingOrder();
+    std::vector<char> result;
+    for (auto it = ascending.begin(); it != ascending.end(); ++it) {
+        result.push_back(*it);
+    }
+    
+    // Should be sorted by ASCII values: !, 5, @, a, a, a
+    std::vector<char> expected = {'!', '5', '@', 'a', 'a', 'a'};
+    CHECK(result == expected);
+    
+    // Remove all 'a' characters
+    charContainer.remove('a');
+    CHECK(charContainer.size() == 3);  // Should have !, 5, @ remaining
+    
+    // Test streaming after removal
+    std::ostringstream stream;
+    stream << charContainer;
+    CHECK(stream.str() == "@ 5 ! ");  // Original order minus the 'a's
+}
+
+TEST_CASE("Char container - bounds checking")
+{
+    MyContainer<char> charContainer;
+    charContainer.add('A');
+    charContainer.add('B');
+    
+    // Test that char iterators also throw when dereferencing past end
+    auto ascending = charContainer.getAscendingOrder();
+    auto it = ascending.begin();
+    
+    // Valid access
+    CHECK(*it == 'A');
+    ++it;
+    CHECK(*it == 'B');
+    ++it;
+    
+    // Should be at end now - dereferencing should throw
+    CHECK_THROWS_AS(*it, std::out_of_range);
+}
+
+TEST_CASE("Char container - empty container operations")
+{
+    MyContainer<char> charContainer;
+    
+    // Test empty container with chars
+    CHECK(charContainer.size() == 0);
+    CHECK(charContainer.isEmpty() == true);
+    
+    // All iterators should work with empty char container
+    auto ascending = charContainer.getAscendingOrder();
+    auto descending = charContainer.getDescendingOrder();
+    auto sideCross = charContainer.getSideCrossOrder();
+    auto reverse = charContainer.getReverseOrder();
+    auto order = charContainer.getOrder();
+    auto middleOut = charContainer.getMiddleOutOrder();
+    
+    // All should have begin == end
+    CHECK(ascending.begin() == ascending.end());
+    CHECK(descending.begin() == descending.end());
+    CHECK(sideCross.begin() == sideCross.end());
+    CHECK(reverse.begin() == reverse.end());
+    CHECK(order.begin() == order.end());
+    CHECK(middleOut.begin() == middleOut.end());
+    
+    // Try to remove from empty char container
+    CHECK_THROWS_AS(charContainer.remove('Z'), std::invalid_argument);
+}

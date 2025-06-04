@@ -18,14 +18,12 @@ all: $(MAIN_EXE) $(TEST_EXE)
 
 test: $(TEST_EXE)
 
-MyContainer_exe: MyContainer.o main.o
-	$(CXX) $(CXXFLAGS) -o MyContainer_exe MyContainer.o main.o
+MyContainer_exe: main.o
+	$(CXX) $(CXXFLAGS) -o MyContainer_exe  main.o
 
-tests_exe: MyContainer.o tests.o
-	$(CXX) $(CXXFLAGS) -o tests_exe MyContainer.o tests.o
+tests_exe: tests.o
+	$(CXX) $(CXXFLAGS) -o tests_exe tests.o
 
-MyContainer.o: MyContainer.cpp MyContainer.hpp
-	$(CXX) $(CXXFLAGS) -c MyContainer.cpp
 
 tests.o: tests.cpp MyContainer.hpp
 	$(CXX) $(CXXFLAGS) -c tests.cpp

@@ -27,13 +27,26 @@ MyContainer is a templated C++ container class that provides multiple specialize
 
 ```
 CPP_EX4_25/
-├── MyContainer.hpp          # Header file with class declarations
+├── MyContainer.hpp          # Header-only template
 ├── MyContainer.cpp          # Implementation file
 ├── main.cpp                 # Demo program
 ├── tests.cpp                # Comprehensive test suite (doctest)
 ├── makefile                 # Build configuration
 └── README.md                # This file
 ```
+
+### Header-Only Design
+
+This project uses a **header-only template library** approach:
+
+- **`MyContainer.hpp`**: Contains all class declarations, method implementations, and template specializations
+- **No separate `.cpp` file**: All template implementations are inline in the header
+- **Benefits**: 
+  - Simpler build process
+  - Better compiler optimization opportunities
+  - Works with any type without explicit instantiation
+  - Easy to distribute as a single header file
+- **Template instantiation**: Happens automatically when you include the header and use the container
 
 ## Building the Project
 
@@ -63,6 +76,8 @@ make vg-test      # Tests with Valgrind
 # Clean build artifacts
 make clean
 ```
+
+**Note**: Since MyContainer is header-only, only `main.cpp` and `tests.cpp` are compiled. The template code is automatically included during compilation.
 
 ## Demo
 
@@ -134,18 +149,24 @@ The project includes comprehensive test cases using the doctest framework:
 
 ## Technical Details
 
+### Template Design
+```cpp
+// Header-only approach - no explicit instantiations needed
+// Templates are instantiated automatically when used:
+MyContainer<int> intContainer;        // Instantiates int version
+MyContainer<char> charContainer;      // Instantiates char version  
+MyContainer<string> stringContainer;  // Instantiates string version
+```
+
+### Compiler Integration
+- **Header-only**: Include `MyContainer.hpp` and start using immediately
+- **No linking required**: All code is in headers, compiled with your source
+- **Template flexibility**: Works with any type that supports required operations (`<`, `==`, copy constructor)
+
 ### Iterator Design Pattern
 - Each iterator is a nested class with standard iterator interface
 - Implements `begin()`, `end()`, `operator++`, `operator*`, `operator==`, `operator!=`
 - Follows C++ iterator conventions and STL compatibility
-
-### Template Specialization
-```cpp
-// Explicit instantiations for efficiency
-template class MyContainer<int>;
-template class MyContainer<double>;
-template class MyContainer<std::string>;
-```
 
 ### Compiler Flags
 - `-std=c++11`: C++11 standard compliance

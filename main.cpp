@@ -47,6 +47,40 @@ int main()
     std::cout << "   Container using operator<<: " << container << std::endl;
     std::cout << "   String container using operator<<: " << stringContainer << std::endl;
 
+    std::cout << "\n4.5.5. Testing with characters:" << std::endl;
+    MyContainer<char> charContainer;
+    charContainer.add('Z');
+    charContainer.add('A');
+    charContainer.add('M');
+    charContainer.add('B');
+    charContainer.add('Y');
+
+    std::cout << "   Char container size: " << charContainer.size() << std::endl;
+    std::cout << "   Char container contents: ";
+    charContainer.print();
+
+    std::cout << "\n   Char AscendingOrder: ";
+    auto charAscending = charContainer.getAscendingOrder();
+    for (auto it = charAscending.begin(); it != charAscending.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "   Char DescendingOrder: ";
+    auto charDescending = charContainer.getDescendingOrder();
+    for (auto it = charDescending.begin(); it != charDescending.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "   Char SideCrossOrder: ";
+    auto charSideCross = charContainer.getSideCrossOrder();
+    for (auto it = charSideCross.begin(); it != charSideCross.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "   Char operator<< output: " << charContainer << std::endl;
 
 
     // == Iterators ==
@@ -123,6 +157,8 @@ int main()
     }
 
     std::cout << "\n=== Demo Complete ===" << std::endl;
+
+
 
 
     return 0;
