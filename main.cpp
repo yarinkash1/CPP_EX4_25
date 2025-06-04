@@ -43,6 +43,12 @@ int main()
     std::cout << "   String container contents: ";
     stringContainer.print();
 
+    std::cout << "\n4.5. Testing operator<< for streaming:" << std::endl;
+    std::cout << "   Container using operator<<: " << container << std::endl;
+    std::cout << "   String container using operator<<: " << stringContainer << std::endl;
+
+
+
     // == Iterators ==
     std::cout << "\n5. AscendingOrder iterator:" << std::endl;
     std::cout << "   Original container contents: ";
@@ -117,5 +123,7 @@ int main()
     }
 
     std::cout << "\n=== Demo Complete ===" << std::endl;
+
+
     return 0;
 }

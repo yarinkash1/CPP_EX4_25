@@ -5,6 +5,7 @@
 namespace my_cont_ns
 {
     // == MyContainer Class Implementation ==
+
     /**
      * @brief Default constructor for MyContainer.
      * Initializes an empty container.
@@ -16,6 +17,7 @@ namespace my_cont_ns
     MyContainer<T>::MyContainer()
     {
         // Empty - std::vector automatically initializes as empty
+        // note: doing: elements = std::vector<T>(); here is exactly the same as not doing anything
     }
 
     /**
@@ -962,4 +964,5 @@ namespace my_cont_ns
     template class MyContainer<int>;
     template class MyContainer<double>;
     template class MyContainer<std::string>;
+    template class MyContainer<char>;
 }

@@ -1,19 +1,19 @@
 // yarinkash1@gmail.com
 
 #pragma once
-#include <iostream>
-#include <vector>
+#include <iostream>  // for std::cout
+#include <vector>    // for std::vector
 #include <algorithm> // for std::find and std::remove
 #include <stdexcept> // for std::invalid_argument
 using namespace std;
 
 namespace my_cont_ns
 {
-    template <typename T = int>
+    template <typename T = int> // Declares MyContainer as a template class with a default type of int
     class MyContainer
     {
     private:
-        std::vector<T> elements;
+        std::vector<T> elements; // Vector to store elements of type T
 
     public:
         MyContainer();
@@ -23,8 +23,8 @@ namespace my_cont_ns
         void add(const T &element);
         void remove(const T &element);
 
-        // Containers:
         // Forward declaration of nested iterators classes
+        //(tells the compiler that these classes exist but doesn't define them yet)
         class AscendingOrder;
         class DescendingOrder;
         class SideCrossOrder;
@@ -32,13 +32,15 @@ namespace my_cont_ns
         class Order;
         class MiddleOutOrder;
 
-        // Factory methods to create iterators
+        // Factory methods to create iterators (wouldn't work without forward declaration):
+
         AscendingOrder getAscendingOrder() const;
         DescendingOrder getDescendingOrder() const;
         SideCrossOrder getSideCrossOrder() const;
         ReverseOrder getReverseOrder() const;
         Order getOrder() const;
         MiddleOutOrder getMiddleOutOrder() const;
+        const std::vector<T> &getElements() const { return elements; }
 
         // **Nested AscendingOrder Iterator Class**
         class AscendingOrder
@@ -176,4 +178,15 @@ namespace my_cont_ns
             MiddleOutOrder end();
         };
     };
+
+    template <typename T>
+    std::ostream &operator<<(std::ostream &os, const MyContainer<T> &container)
+    {
+        const auto &elements = container.getElements();
+        for (const auto &elem : elements)
+        {
+            os << elem << " ";
+        }
+        return os;
+    }
 }
