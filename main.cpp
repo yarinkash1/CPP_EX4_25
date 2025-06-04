@@ -9,6 +9,11 @@ int main()
 
     std::cout << "=== MyContainer Demo ===" << std::endl;
 
+    // ========================================
+    // SECTION 1: Basic Container Operations
+    // ========================================
+    std::cout << "\n========== BASIC OPERATIONS ==========" << std::endl;
+    
     // Create a container with default type (int)
     MyContainer<> container;
 
@@ -33,7 +38,12 @@ int main()
     std::cout << "   Container contents: ";
     container.print();
 
-    std::cout << "\n4. With strings:" << std::endl;
+    // ========================================
+    // SECTION 2: Template Flexibility Tests
+    // ========================================
+    std::cout << "\n\n========== TEMPLATE FLEXIBILITY ==========" << std::endl;
+
+    std::cout << "\n4. Testing with strings:" << std::endl;
     MyContainer<std::string> stringContainer;
     stringContainer.add("Hello");
     stringContainer.add("World");
@@ -43,11 +53,7 @@ int main()
     std::cout << "   String container contents: ";
     stringContainer.print();
 
-    std::cout << "\n4.5. Testing operator<< for streaming:" << std::endl;
-    std::cout << "   Container using operator<<: " << container << std::endl;
-    std::cout << "   String container using operator<<: " << stringContainer << std::endl;
-
-    std::cout << "\n4.5.5. Testing with characters:" << std::endl;
+    std::cout << "\n5. Testing with characters:" << std::endl;
     MyContainer<char> charContainer;
     charContainer.add('Z');
     charContainer.add('A');
@@ -59,46 +65,37 @@ int main()
     std::cout << "   Char container contents: ";
     charContainer.print();
 
-    std::cout << "\n   Char AscendingOrder: ";
-    auto charAscending = charContainer.getAscendingOrder();
-    for (auto it = charAscending.begin(); it != charAscending.end(); ++it) {
-        std::cout << *it << " ";
-    }
-    std::cout << std::endl;
+    // ========================================
+    // SECTION 3: Stream Output Operator
+    // ========================================
+    std::cout << "\n\n========== STREAM OUTPUT OPERATOR ==========" << std::endl;
 
-    std::cout << "   Char DescendingOrder: ";
-    auto charDescending = charContainer.getDescendingOrder();
-    for (auto it = charDescending.begin(); it != charDescending.end(); ++it) {
-        std::cout << *it << " ";
-    }
-    std::cout << std::endl;
+    std::cout << "\n6. Testing operator<< for streaming:" << std::endl;
+    std::cout << "   Int container:    " << container << std::endl;
+    std::cout << "   String container: " << stringContainer << std::endl;
+    std::cout << "   Char container:   " << charContainer << std::endl;
 
-    std::cout << "   Char SideCrossOrder: ";
-    auto charSideCross = charContainer.getSideCrossOrder();
-    for (auto it = charSideCross.begin(); it != charSideCross.end(); ++it) {
-        std::cout << *it << " ";
-    }
-    std::cout << std::endl;
-
-    std::cout << "   Char operator<< output: " << charContainer << std::endl;
-
-
-    // == Iterators ==
-    std::cout << "\n5. AscendingOrder iterator:" << std::endl;
-    std::cout << "   Original container contents: ";
+    // ========================================
+    // SECTION 4: Iterator Demonstrations
+    // ========================================
+    std::cout << "\n\n========== ITERATOR TYPES ==========" << std::endl;
+    
+    std::cout << "\n7. Current container state:" << std::endl;
+    std::cout << "   Elements: [10, 20, 15] (after removing 5s)" << std::endl;
+    std::cout << "   Container contents: ";
     container.print();
 
-    // Get ascending order iterator
+    // AscendingOrder iterator
+    std::cout << "\n8. AscendingOrder (smallest to largest):" << std::endl;
     auto ascending = container.getAscendingOrder();
-    std::cout << "   Ascending order traversal: ";
-    for (auto it = ascending.begin(); it != ascending.end(); ++it)
-    {
+    std::cout << "   ";
+    for (auto it = ascending.begin(); it != ascending.end(); ++it) {
         std::cout << *it << " ";
     }
     std::cout << std::endl;
 
     // DescendingOrder iterator
-    std::cout << "\n6.   DescendingOrder (largest to smallest):" << std::endl;
+    std::cout << "\n9. DescendingOrder (largest to smallest):" << std::endl;
     auto descending = container.getDescendingOrder();
     std::cout << "   ";
     for (auto it = descending.begin(); it != descending.end(); ++it) {
@@ -107,7 +104,7 @@ int main()
     std::cout << std::endl;
 
     // SideCrossOrder iterator
-    std::cout << "\n7.   SideCrossOrder (alternating min/max):" << std::endl;
+    std::cout << "\n10. SideCrossOrder (alternating min/max):" << std::endl;
     auto sideCross = container.getSideCrossOrder();
     std::cout << "   ";
     for (auto it = sideCross.begin(); it != sideCross.end(); ++it) {
@@ -116,7 +113,7 @@ int main()
     std::cout << std::endl;
 
     // ReverseOrder iterator
-    std::cout << "\n8.   ReverseOrder (reverse insertion order):" << std::endl;
+    std::cout << "\n11. ReverseOrder (reverse insertion order):" << std::endl;
     auto reverse = container.getReverseOrder();
     std::cout << "   ";
     for (auto it = reverse.begin(); it != reverse.end(); ++it) {
@@ -125,7 +122,7 @@ int main()
     std::cout << std::endl;
 
     // Order iterator
-    std::cout << "\n9.   Order (original insertion order):" << std::endl;
+    std::cout << "\n12. Order (original insertion order):" << std::endl;
     auto order = container.getOrder();
     std::cout << "   ";
     for (auto it = order.begin(); it != order.end(); ++it) {
@@ -134,9 +131,8 @@ int main()
     std::cout << std::endl;
 
     // MiddleOutOrder iterator
-
-    std::cout << "\n10.   MiddleOutOrder (middle, then alternating left-right):" << std::endl;
-        std::cout << "Order of elemets added: 10 ,20 ,15" << std::endl;
+    std::cout << "\n13. MiddleOutOrder (middle, then alternating left-right):" << std::endl;
+    std::cout << "    Current elements: [10, 20, 15]" << std::endl;
     auto middleOut = container.getMiddleOutOrder();
     std::cout << "   ";
     for (auto it = middleOut.begin(); it != middleOut.end(); ++it) {
@@ -144,22 +140,59 @@ int main()
     }
     std::cout << std::endl;
 
-    // == Error Handling ==
-    std::cout << "\n11. Testing error handling:" << std::endl;
-    std::cout << "   Attempting to remove an element that doesn't exist (555):" << std::endl;
-    try
-    {
-        container.remove(555); // Element that doesn't exist
+    // ========================================
+    // SECTION 5: Character Iterator Examples  
+    // ========================================
+    std::cout << "\n\n========== CHAR ITERATOR EXAMPLES ==========" << std::endl;
+
+    std::cout << "\n14. Character container iterator examples:" << std::endl;
+    std::cout << "    Original chars: [Z, A, M, B, Y]" << std::endl;
+
+    std::cout << "\n    Char AscendingOrder:  ";
+    auto charAscending = charContainer.getAscendingOrder();
+    for (auto it = charAscending.begin(); it != charAscending.end(); ++it) {
+        std::cout << *it << " ";
     }
-    catch (const std::invalid_argument &e)
-    {
-        std::cout << "   Caught expected error: " << e.what() << std::endl;
+    std::cout << std::endl;
+
+    std::cout << "    Char DescendingOrder: ";
+    auto charDescending = charContainer.getDescendingOrder();
+    for (auto it = charDescending.begin(); it != charDescending.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "    Char SideCrossOrder:  ";
+    auto charSideCross = charContainer.getSideCrossOrder();
+    for (auto it = charSideCross.begin(); it != charSideCross.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+
+    // ========================================
+    // SECTION 6: Error Handling
+    // ========================================
+    std::cout << "\n\n========== ERROR HANDLING ==========" << std::endl;
+
+    std::cout << "\n15. Testing error handling:" << std::endl;
+    
+    std::cout << "    Attempting to remove non-existent int (555):" << std::endl;
+    try {
+        container.remove(555);
+    }
+    catch (const std::invalid_argument &e) {
+        std::cout << "    Caught expected error: " << e.what() << std::endl;
+    }
+
+    std::cout << "\n    Attempting to remove non-existent char ('X'):" << std::endl;
+    try {
+        charContainer.remove('X');
+    }
+    catch (const std::invalid_argument &e) {
+        std::cout << "    Caught expected error: " << e.what() << std::endl;
     }
 
     std::cout << "\n=== Demo Complete ===" << std::endl;
-
-
-
 
     return 0;
 }
