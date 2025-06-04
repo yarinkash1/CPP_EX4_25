@@ -784,3 +784,106 @@ TEST_CASE("Multiple iterators on same container")
     // Container should be unchanged
     CHECK(container.size() == 3);
 }
+
+
+// Add this test case to your tests.cpp file
+
+TEST_CASE("Operator<< streaming functionality") 
+{
+    MyContainer<int> container;
+    
+    // Test empty container
+    std::ostringstream empty_stream;
+    empty_stream << container;
+    CHECK(empty_stream.str() == "");
+    
+    // Add elements and test streaming
+    container.add(10);
+    container.add(20);
+    container.add(30);
+    
+    std::ostringstream stream;
+    stream << container;
+    
+    // Should output elements separated by spaces
+    CHECK(stream.str() == "10 20 30 ");
+    
+    // Test with string container
+    MyContainer<std::string> stringContainer;
+    stringContainer.add("Hello");
+    stringContainer.add("World");
+    stringContainer.add("C++");
+    
+    std::ostringstream string_stream;
+    string_stream << stringContainer;
+    CHECK(string_stream.str() == "Hello World C++ ");
+    
+    // Test with single element
+    MyContainer<int> singleContainer;
+    singleContainer.add(5);
+    
+    std::ostringstream single_stream;
+    single_stream << singleContainer;
+    CHECK(single_stream.str() == "5 ");
+    
+    // Test that streaming doesn't modify container
+    CHECK(container.size() == 3);
+    CHECK(stringContainer.size() == 3);
+    CHECK(singleContainer.size() == 1);
+}
+
+TEST_CASE("Operator<< with duplicates") 
+{
+    MyContainer<int> container;
+    container.add(5);
+    container.add(3);
+    container.add(5);
+    container.add(1);
+    container.add(5);
+    
+    std::ostringstream stream;
+    stream << container;
+    
+    // Should preserve all duplicates in original order
+    CHECK(stream.str() == "5 3 5 1 5 ");
+}
+
+TEST_CASE("Operator<< integration with other operations") 
+{
+    MyContainer<int> container;
+    container.add(100);
+    container.add(50);
+    container.add(75);
+    
+    // Stream before removal
+    std::ostringstream before_stream;
+    before_stream << container;
+    CHECK(before_stream.str() == "100 50 75 ");
+    
+    // Remove element and stream again
+    container.remove(50);
+    
+    std::ostringstream after_stream;
+    after_stream << container;
+    CHECK(after_stream.str() == "100 75 ");
+    
+    // Verify size is correct
+    CHECK(container.size() == 2);
+}
+
+TEST_CASE("Operator<< with chaining") 
+{
+    MyContainer<int> container1;
+    MyContainer<int> container2;
+    
+    container1.add(1);
+    container1.add(2);
+    
+    container2.add(10);
+    container2.add(20);
+    
+    std::ostringstream stream;
+    stream << "Container 1: " << container1 << "| Container 2: " << container2 << "| End";
+    
+    CHECK(stream.str() == "Container 1: 1 2 | Container 2: 10 20 | End");
+}
